@@ -1,6 +1,10 @@
 # sdl2_gui
 No BS GUI library for SDL2
 
+## Disclaimer
+There are much more powerful and efficient GUI libraries that use OpenGL that integrate with SDL2. This library is primarily for small, quick projects
+where you don't necessarily want to add all the boilerplate code required to use these larger libraries.
+
 ## How to Install
 Run `make dynamic` or `make static` to generate a dynamic or static library respectively. Move the header and library files to their designated directories on your operating system.
 
