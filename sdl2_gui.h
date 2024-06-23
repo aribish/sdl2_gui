@@ -81,9 +81,7 @@ typedef struct {
 	int x, y, width, height;
 	int borderWidth;
 	SDL_Color fillColor, borderColor;
-	bool inside;
-	bool pressed;
-	bool onScreen;
+	bool inside, pressed, onScreen;
 } GUI_Button;
 
 typedef struct {
@@ -91,10 +89,8 @@ typedef struct {
 	int x, y, width, length;
 	bool vertical;
 	SDL_Color sliderColor, handleColor;
-	float value;
-	float buttonValueMod;
-	bool holding;
-	bool onScreen;
+	float value, buttonValueMod;
+	bool holding, onScreen;
 } GUI_Slider;
 
 GUI_Context* GUI_Init(SDL_Window *win, SDL_Renderer *render);
@@ -122,8 +118,8 @@ void GUI_FreeSlider(GUI_Context *context, GUI_Slider *slider);
 void GUI_DrawSlider(GUI_Context *context, GUI_Slider *slider, int x, int y);
 
 bool GUI_IsPointInsideRect(int mx, int my, int x, int y, int w, int h);
-void GUI_SetEvent(GUI_Context *context, void* component, GUI_Event event, GUI_EventType type);
-void GUI_RemoveEvent(GUI_Context *context, void* component, GUI_EventType type);
+void GUI_SetEvent(GUI_Context *context, void *component, GUI_Event event, GUI_EventType type);
+void GUI_RemoveEvent(GUI_Context *context, void *component, GUI_EventType type);
 void GUI_UpdateEvents(GUI_Context *context, SDL_Event event);
 
 #endif
