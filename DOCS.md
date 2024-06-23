@@ -34,9 +34,9 @@ This is returned by `GUI_NewFont` and used to reference your loaded font when ma
 Event callback function. See the `Events` section for details.
 
 ## Context
-<!-- 
+```
 typedef struct {
-	SDL_Window *window;
+    SDL_Window *window;
     SDL_Renderer *render;
     int width, height;
     GUI_ComponentNode *components;
@@ -44,7 +44,7 @@ typedef struct {
     int numFonts;
     GUI_EventNode *events;
 } GUI_Context; 
--->
+```
 
 ### `GUI_Context* GUI_Init(SDL_Window *win, SDL_Renderer *render)`
 Initializes a GUI_Context to use with all functions in sdl2_gui. This function also initializes the `SDL_ttf` and `SDL_image` libraries.
@@ -59,12 +59,12 @@ Frees all components, fonts, and events from memory, and terminates `SDL_ttf` an
 
 ## Components
 ### GUI_Text
-<!--
+```
 typedef struct {
-	SDL_Texture* texture;
+    SDL_Texture* texture;
     int width, height;
 }
--->
+```
 
 #### `GUI_Text* GUI_NewTextBg(GUI_Context *context, GUI_FontID font, const char *str, SDL_Color fg, SDL_Color bg)`
 Creates and serializes a new text component with a colored highlight/background.
@@ -79,12 +79,12 @@ This function is used inside of `GUI_FreeComponent` to free the acual component 
 Draws a text component to the screen at position (x, y). All drawing functions in this library should be called in between your `SDL_RenderClear` and `SDL_RenderPresent` function calls.
 
 ### GUI_Image
-<!--
+```
 typedef struct {
     SDL_Texture *texture;
     int x, y;
 } GUI_Image;
--->
+```
 
 #### `GUI_Image* GUI_NewImage(GUI_Context *context, const char *path, float xScale, float yScale)`
 BMP, PNG, JPG, WEBP, TIF image files are supported. This function uses `SDL_image` and SDL's builtin BMP functions to load images, and scales them accordingly.
@@ -96,7 +96,7 @@ Read the section for `GUI_FreeText` for details. Do not use this function.
 Draws the image texture to the screen.
 
 ### GUI_Button
-<!--
+```
 typedef struct {
     GUI_Text *textContext;
     GUI_Image *imageContext;
@@ -105,7 +105,7 @@ typedef struct {
     SDL_Color fillColor, borderColor;
     bool inside, pressed, onScreen;
 }
--->
+```
 
 #### `GUI_Button* GUI_NewButton(GUI_Context *context, int width, int height, int borderWidth, SDL_Color fillColor, SDL_Color borderColor, GUI_Text *textContent, GUI_Image *imageContent)`
 Generates a button with no events attached. If 0 is passed for `borderWidth`, no border is drawn and `borderColor` is ignored. `textContext` and `imageContext` can be NULL, in which case they will be ignored. If both values passed are non-NULL, the image will be drawn above the text. These content components are drawn in the center of the button, and are **not** freed if `GUI_FreeComponent` is called on the parent button component..
@@ -117,7 +117,7 @@ Read the section for `GUI_FreeText` for details. Do not use this function.
 Draws the button to the screen. The button's `onScreen` value is also flagged true, which allows it to see input events. If the button has not been drawn after its last handled input event, it will stop receiving input until redrawn. The button's position coordinates are also updated to be used when handling events internally.
 
 ### GUI_Slider
-<!--
+```
 typedef struct {
     GUI_Button *inc, *dec;
     int x, y, width, length;
@@ -126,7 +126,7 @@ typedef struct {
     float value, buttonValueMod;
     bool holding, onScreen;
 }
--->
+```
 
 #### `GUI_Slider* GUI_NewSlider(GUI_Context *context, GUI_Button *incrementButton, GUI_Button *decrementButton, float buttonValueMod, int width, int length, bool vertical, SDL_Color sliderColor, SDL_Color handleColor)`
 Creates a new slider component, which can be horizontal or vertical. `incrementButton` and `decrementButton` are optional, but if just one is NULL, the other is ignored. `buttonValueMod` is the amount the slider's `value` increases or decreases when the increment/decrement buttons are clicked, and will be ignored if no buttons are used. `value` is an interpolated float that is in between 0 and 1.
@@ -138,9 +138,11 @@ Read the section for `GUI_FreeText` for details. Do not use this function.
 The slider is drawn relative to the bar, not the increment/decrement buttons. The slider's handle's width is 3 times the width of the bar, and its length is equal to the width of the bar. Like the button component, it will only receive events while on screen.
 
 ## Events
-<!--
-void GUI_Event(void *component)
--->
+```
+void GUI_Event(void *component) {
+
+}
+```
 Input events are handled in these callback functions. `component` can be typecasted to its correlative component type to access the component anonymously. It is not required to be used, and is mostly there for sliders, which make use of the event system internally.
 
 ### `void GUI_SetEvent(GUI_Context *context, void *component, GUI_Event event, GUI_EventType type)`
