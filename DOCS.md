@@ -25,6 +25,8 @@ These macros represent an `SDL_Color` struct
 * GUI_BUTTON_ON_ENTER
 * GUI_BUTTON_ON_EXIT
 * GUI_SLIDER_INTERNAL
+* GUI_SLIDER_ON_HOLD
+* GUI_SLIDER_ON_RELEASE
 
 ## Typedefs
 ### `typedef int GUI_FontID`
@@ -34,15 +36,14 @@ This is returned by `GUI_NewFont` and used to reference your loaded font when ma
 Event callback function. See the `Events` section for details.
 
 ## Context
-```
+``` 
 typedef struct {
-    SDL_Window *window;
+	SDL_Window *window;
     SDL_Renderer *render;
     int width, height;
     GUI_ComponentNode *components;
     TTF_Font **fonts;
     int numFonts;
-    GUI_EventNode *events;
 } GUI_Context; 
 ```
 
@@ -61,7 +62,7 @@ Frees all components, fonts, and events from memory, and terminates `SDL_ttf` an
 ### GUI_Text
 ```
 typedef struct {
-    SDL_Texture* texture;
+	SDL_Texture* texture;
     int width, height;
 }
 ```
@@ -108,7 +109,7 @@ typedef struct {
 ```
 
 #### `GUI_Button* GUI_NewButton(GUI_Context *context, int width, int height, int borderWidth, SDL_Color fillColor, SDL_Color borderColor, GUI_Text *textContent, GUI_Image *imageContent)`
-Generates a button with no events attached. If 0 is passed for `borderWidth`, no border is drawn and `borderColor` is ignored. `textContext` and `imageContext` can be NULL, in which case they will be ignored. If both values passed are non-NULL, the image will be drawn above the text. These content components are drawn in the center of the button, and are **not** freed if `GUI_FreeComponent` is called on the parent button component..
+Generates a button with no events attached. If 0 is passed for `borderWidth`, no border is drawn and `borderColor` is ignored. `textContext` and `imageContext` can be NULL, in which case they will be ignored. If both values passed are non-NULL, the image will be drawn above the text. These content components are drawn in the center of the button, and are **not** freed if `GUI_FreeComponent` is called on the parent button component.
 
 #### `void GUI_FreeButton(GUI_Context *context, GUI_Button *button)`
 Read the section for `GUI_FreeText` for details. Do not use this function.
@@ -139,27 +140,31 @@ The slider is drawn relative to the bar, not the increment/decrement buttons. Th
 
 ## Events
 ```
-void GUI_Event(void *component) {
-
-}
+void GUI_Event(void *component)
 ```
 Input events are handled in these callback functions. `component` can be typecasted to its correlative component type to access the component anonymously. It is not required to be used, and is mostly there for sliders, which make use of the event system internally.
 
-### `void GUI_SetEvent(GUI_Context *context, void *component, GUI_Event event, GUI_EventType type)`
-Binds the given event callback to the component to be called when an event of the given type occurs. As of now, only one event callback can be added to a component for each event type. If you attempt to add a second callback for the same event type, this function will simply return without doing anything.
+### `bool GUI_AddEvent(GUI_Context *context, void *component, GUI_Event event, GUI_EventType type)`
+Adds an event listener that calls `event` when an input event of type `type` occurs. It is possible to have multiple callback functions for the same event type. Returns true if an error ocurred.
 
-### `void GUI_RemoveEvent(GUI_context *context, void *component, GUI_EventType type)`
-Unbinds the event callback of the given type from the component.
+### `bool GUI_ClearEvents(GUI_Context *context, void *component)`
+Clears all added events from `component`. Returns true if an error occurred.
 
-### `void GUI_UpdateEvents(GUI_Context *context, SDL_Event event)`
-This function is expected to be placed inside of your `SDL_PollEvent` loop. It checks registered event callbacks and calls them if their conditions have been met.
+### `bool GUI_RemoveEvent(GUI_Context *context, void *component, GUI_Event event, GUI_EventType type)`
+Removes a specific, previously added event listener. Returns true if an error occurred.
+
+### `bool GUI_TriggerEvents(GUI_Context *context, void *component, GUI_EventType type)`
+Calls all event callback functions associated with `type` for `component`. Returns true if an error ocurred.
+
+### `bool GUI_Update(GUI_Context *context, SDL_Event event)`
+This function is expected to be placed inside of your `SDL_PollEvent` loop. It loops through all input-receiving components and checks for changes, and then calls the respective event callbacks that have been added. Returns true if the input event was handled.
 
 ## Misc
 ### `void GUI_SerializeComponent(GUI_Context *context, void *component, GUI_ComponentType type)`
 This function is automatically called when a new component is created. It registers the component to be freed from memory when `GUI_Quit` is called.
 
 ### `void GUI_FreeComponent(GUI_Context *context, void *component)`
-If you need to destroy and recreate a component during program runtime, this is the function you should use. It removes the component from the internal list, freeing all component and container data from memory.
+If you need to destroy and recreate a component during program runtime, this is the function you should use. It removes the component from the internal list, freeing all component and container data, including events, from memory.
 
 ### `GUI_FontID GUI_NewFont(GUI_context *context, const char *path, int ptsize)`
 Loads a TTF font and returns a `GUI_FontID` to reference it with. All fonts loaded with this function are freed when `GUI_Quit` is called.
