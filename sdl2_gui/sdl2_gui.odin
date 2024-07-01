@@ -71,9 +71,9 @@ Image :: struct {
 }
 
 Button :: struct {
-	textContext: ^Text,
-	imagecontext: ^Image,
-	x, y, width, height, borderWidth: int,
+	textContent: ^Text,
+	imageContent: ^Image,
+	x, y, width, height, borderWidth: i32,
 	fillColor, borderColor: sdl.Color,
 	inside, pressed, onScreen: bool
 }
