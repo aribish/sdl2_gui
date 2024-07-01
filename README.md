@@ -17,6 +17,9 @@ being displayed, but the source code kind of shows off how you might integrate t
 
 ## Updates
 
+### 2024-07-01
+This bug in my synth project got me looking through my source code everywhere, but I caught a few small things while looking over this. Button borders are now drawn on top of its content, and a few typos in the Odin bindings were fixed.
+
 ### 2024-06-25
 I completely rewrote the event system and added a couple of new event-related utility functions. I also fixed a few bugs that came up and made bindings for Odin.
 I think this is pretty much done for now.
