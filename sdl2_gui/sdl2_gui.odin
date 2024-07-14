@@ -34,19 +34,21 @@ EventType :: enum {
 	BUTTON_ON_RELEASE,
 	BUTTON_ON_ENTER,
 	BUTTON_ON_EXIT,
-	SLIDER_INTERNAL
+	SLIDER_INTERNAL,
+	SLIDER_ON_HOLD,
+	SLIDER_ON_RELEASE
 }
 
 ComponentNode :: struct {
 	component: rawptr,
 	type: ComponentType,
+	events: ^EventNode,
 	prev, next: ^ComponentNode
 }
 
 EventNode :: struct {
 	event: Event,
 	type: EventType,
-	component: rawptr,
 	prev, next: ^EventNode
 }
 
@@ -57,7 +59,6 @@ Context :: struct {
 	components: ^ComponentNode,
 	fonts: ^^ttf.Font,
 	numFonts: i32,
-	events: ^^EventNode
 }
 
 Text :: struct {
