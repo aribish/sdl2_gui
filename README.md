@@ -17,6 +17,9 @@ being displayed, but the source code kind of shows off how you might integrate t
 
 ## Updates
 
+### 2024-07-14
+My bad I think I totally forgot to update the Odin bindings after a big refactor.
+
 ### 2024-07-01
 This bug in my synth project got me looking through my source code everywhere, but I caught a few small things while looking over this. Button borders are now drawn on top of its content, and a few typos in the Odin bindings were fixed.
 
