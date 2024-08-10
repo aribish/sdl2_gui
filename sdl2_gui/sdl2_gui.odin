@@ -26,7 +26,7 @@ ComponentType :: enum {
 	COMPONENT_TEXT,
 	COMPONENT_IMAGE,
 	COMPONENT_BUTTON,
-	COMPONENT_SLIDER
+	COMPONENT_SLIDER,
 }
 
 EventType :: enum {
@@ -36,20 +36,20 @@ EventType :: enum {
 	BUTTON_ON_EXIT,
 	SLIDER_INTERNAL,
 	SLIDER_ON_HOLD,
-	SLIDER_ON_RELEASE
+	SLIDER_ON_RELEASE,
 }
 
 ComponentNode :: struct {
 	component: rawptr,
 	type: ComponentType,
 	events: ^EventNode,
-	prev, next: ^ComponentNode
+	prev, next: ^ComponentNode,
 }
 
 EventNode :: struct {
 	event: Event,
 	type: EventType,
-	prev, next: ^EventNode
+	prev, next: ^EventNode,
 }
 
 Context :: struct {
@@ -63,12 +63,12 @@ Context :: struct {
 
 Text :: struct {
 	texture: ^sdl.Texture,
-	width, height: i32
+	width, height: i32,
 }
 
 Image :: struct {
 	texture: ^sdl.Texture,
-	width, height: i32
+	width, height: i32,
 }
 
 Button :: struct {
@@ -76,7 +76,7 @@ Button :: struct {
 	imageContent: ^Image,
 	x, y, width, height, borderWidth: i32,
 	fillColor, borderColor: sdl.Color,
-	inside, pressed, onScreen: bool
+	inside, pressed, onScreen: bool,
 }
 
 Slider :: struct {
@@ -84,7 +84,8 @@ Slider :: struct {
 	x, y, width, length: i32,
 	vertical: bool,
 	sliderColor, handleColor: sdl.Color,
-	holding, onScreen: bool
+	value, buttonValueMod: f32,
+	holding, onScreen: bool,
 }
 
 @(link_prefix = "GUI_", default_calling_convention = "c")
